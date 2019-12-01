@@ -334,7 +334,7 @@ type Options struct {
 	TempWritePath      string        `config:"tmp_upload_path"`
 	TempWaitTime       fs.Duration   `config:"tmp_wait_time"`
 	DbWaitTime         fs.Duration   `config:"db_wait_time"`
-	DbNoSync		   bool 		 `config:"db_nosync"`
+	DbNoSync	   bool 		 `config:"db_nosync"`
 	DbNoFreelistSync   bool 		 `config:"db_nosync-freelist"`
 }
 
