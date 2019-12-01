@@ -280,7 +280,34 @@ error.
 
 If you set it to 0 then it will wait forever.`,
 			Advanced: true,
-		}},
+		}, {
+			Name:    "db_nosync",
+			Default: false,
+			Help: `Open database using NoSync, disabled by default. Setting to true
+allows for much higher write performance. Best used for initial db creation.
+
+From boltdb documentation:			
+Setting the NoSync flag will cause the database to skip fsync()
+calls after each commit. This can be useful when bulk loading data
+into a database and you can restart the bulk load in the event of
+a system failure or database corruption. Do not set this flag for
+normal use.
+
+THIS IS UNSAFE. PLEASE USE WITH CAUTION.`,
+			Hide:     fs.OptionHideConfigurator,
+			Advanced: true,
+		}, {
+			Name:    "db_nosync-freelist",
+			Default: false,
+			Help: `Open database using NoFreelistSync 
+
+From bbolt documentation:
+When true, skips syncing freelist to disk. This improves the database
+write performance under normal operation, but requires a full database
+re-sync during recovery.`,
+			Hide:     fs.OptionHideConfigurator,
+			Advanced: true,
+		},},
 	})
 }
 
@@ -307,6 +334,8 @@ type Options struct {
 	TempWritePath      string        `config:"tmp_upload_path"`
 	TempWaitTime       fs.Duration   `config:"tmp_wait_time"`
 	DbWaitTime         fs.Duration   `config:"db_wait_time"`
+	DbNoSync		   bool 		 `config:"db_nosync"`
+	DbNoFreelistSync   bool 		 `config:"db_nosync-freelist"`
 }
 
 // Fs represents a wrapped fs.Fs
@@ -443,6 +472,8 @@ func NewFs(name, rootPath string, m configmap.Mapper) (fs.Fs, error) {
 	f.cache, err = GetPersistent(dbPath, chunkPath, &Features{
 		PurgeDb:    opt.DbPurge,
 		DbWaitTime: time.Duration(opt.DbWaitTime),
+		DbNoSync:	opt.DbNoSync,
+		DbNoFreelistSync: opt.DbNoFreelistSync,
 	})
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to start cache db")
