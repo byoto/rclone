@@ -307,7 +307,7 @@ write performance under normal operation, but requires a full database
 re-sync during recovery.`,
 			Hide:     fs.OptionHideConfigurator,
 			Advanced: true,
-		},},
+		}},
 	})
 }
 
