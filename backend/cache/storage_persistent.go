@@ -34,6 +34,9 @@ const (
 type Features struct {
 	PurgeDb    bool          // purge the db before starting
 	DbWaitTime time.Duration // time to wait for DB to be available
+	DbNoSync   bool
+	DbNoFreelistSync bool
+
 }
 
 var boltMap = make(map[string]*Persistent)
@@ -116,12 +119,15 @@ func (b *Persistent) String() string {
 // refreshDb will delete the file before to create an empty DB if it's set to true
 func (b *Persistent) connect() error {
 	var err error
-
+	
 	err = os.MkdirAll(b.dataPath, os.ModePerm)
 	if err != nil {
 		return errors.Wrapf(err, "failed to create a data directory %q", b.dataPath)
 	}
-	b.db, err = bolt.Open(b.dbPath, 0644, &bolt.Options{Timeout: b.features.DbWaitTime})
+	b.db, err = bolt.Open(b.dbPath, 0644, &bolt.Options{
+		Timeout: b.features.DbWaitTime,
+		NoSync: b.features.DbNoSync,
+		NoFreelistSync: b.features.DbNoFreelistSync})
 	if err != nil {
 		return errors.Wrapf(err, "failed to open a cache connection to %q", b.dbPath)
 	}
