@@ -335,7 +335,7 @@ type Options struct {
 	TempWaitTime       fs.Duration   `config:"tmp_wait_time"`
 	DbWaitTime         fs.Duration   `config:"db_wait_time"`
 	DbNoSync	   bool 		 `config:"db_nosync"`
-	DbNoFreelistSync   bool 		 `config:"db_nosync-freelist"`
+	DbNoFreelistSync   bool 		 `config:"db_nosync_freelist"`
 }
 
 // Fs represents a wrapped fs.Fs
