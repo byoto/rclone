@@ -119,7 +119,7 @@ func (b *Persistent) String() string {
 // refreshDb will delete the file before to create an empty DB if it's set to true
 func (b *Persistent) connect() error {
 	var err error
-	
+
 	err = os.MkdirAll(b.dataPath, os.ModePerm)
 	if err != nil {
 		return errors.Wrapf(err, "failed to create a data directory %q", b.dataPath)
